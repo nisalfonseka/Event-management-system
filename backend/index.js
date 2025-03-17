@@ -1,17 +1,26 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { PORT, mongoDBURL } from './config.js';
+import { PORT, mongoDBURL, JWT_SECRET } from './config.js';
+import authRoutes from './routes/authRoutes.js';
+
+// Set JWT_SECRET as an environment variable
+process.env.JWT_SECRET = JWT_SECRET;
 
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3000', // Allow frontend to access the backend
+  origin: ['http://localhost:3000', 'http://localhost:5173'], // Allow frontend to access the backend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Routes
+app.use('/api/auth', authRoutes);
+// Fix for users endpoint - directly map to the getAllUsers route
+app.use('/api/users', authRoutes);
 
 // Default route
 app.get('/', (req, res) => {
