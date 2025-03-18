@@ -142,6 +142,7 @@ const AdminEvents = () => {
           <Link to="/admin/settings" className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-gray-100">
             <span className="ml-3">Settings</span>
           </Link>
+         
           <button 
             onClick={handleLogout} 
             className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-gray-100 w-full text-left"

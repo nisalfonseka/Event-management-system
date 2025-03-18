@@ -11,6 +11,9 @@ import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
 import PaymentCart from './pages/payment/PaymentCart';
 import Feedback from './pages/feedback/feedback';
+// import Managefeedback from './pages/feedback/managefeedback';
+import Feedbackview from './pages/feedback/feedbackview';
+
 
 
 // Import Event Components
@@ -38,6 +41,8 @@ const App = () => {
             <Route path='/payment' element={<PaymentCart />} />
             <Route path='/events' element={<BrowseEvents />} />
             { <Route path='/feedback' element={<Feedback />} /> }
+            {/* { <Route path='/managefeedback' element={<Managefeedback />} /> } */}
+            { <Route path='/feedbackview' element={<Feedbackview />} /> }
 
             {/* User routes */}
             <Route element={<ProtectedRoute />}>
