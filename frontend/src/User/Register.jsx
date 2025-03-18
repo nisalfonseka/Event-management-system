@@ -194,9 +194,9 @@ const Register = () => {
                 onChange={handleChange}
               >
                 <option value="user">User</option>
-                <option value="admin">Admin</option>
+                {/* <option value="admin">Admin</option> */}
               </select>
-              <p className="mt-1 text-xs text-gray-500">Note: Admin registrations require approval by existing administrators.</p>
+              {/* <p className="mt-1 text-xs text-gray-500">Note: Admin registrations require approval by existing administrators.</p> */}
             </div>
             
             {/* Conditionally show admin specific fields */}
