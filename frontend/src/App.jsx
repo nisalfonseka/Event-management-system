@@ -10,6 +10,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
 import PaymentCart from './pages/payment/PaymentCart';
+import Feedback from './pages/feedback/feedback';
+
 
 // Import Event Components
 import CreateEvent from './Events/CreateEvent';
@@ -35,7 +37,8 @@ const App = () => {
             <Route path='/register' element={<Register />} />
             <Route path='/payment' element={<PaymentCart />} />
             <Route path='/events' element={<BrowseEvents />} />
-            
+            { <Route path='/feedback' element={<Feedback />} /> }
+
             {/* User routes */}
             <Route element={<ProtectedRoute />}>
               <Route path='/dashboard' element={<UserDashboard />} />
