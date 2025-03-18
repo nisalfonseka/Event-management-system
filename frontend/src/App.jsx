@@ -10,6 +10,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
 import PaymentCart from './pages/payment/PaymentCart';
+ import Feedback from './pages/feedback/feedback';
+
 
 const App = () => {
   const location = useLocation();
@@ -26,6 +28,7 @@ const App = () => {
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
             <Route path='/payment' element={<PaymentCart />} />
+            { <Route path='/feedback' element={<Feedback />} /> }
             
             {/* User routes */}
             <Route element={<ProtectedRoute />}>
