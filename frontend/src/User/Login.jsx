@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
@@ -31,14 +31,14 @@ const Login = () => {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
         
+        // Store the intended destination based on user role
+        const destination = response.data.user.role === 'admin' ? '/admin-dashboard' : '/';
+        localStorage.setItem('redirectAfterLogin', destination);
+        
         enqueueSnackbar('Login successful!', { variant: 'success' });
         
-        // Redirect based on user role
-        if (response.data.user.role === 'admin') {
-          navigate('/admin-dashboard');
-        } else {
-          navigate('/'); // Redirect regular users to home page instead of dashboard
-        }
+        // Refresh the page to update all application state
+        window.location.reload();
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -48,6 +48,15 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  // Handle redirect after refresh if needed
+  useEffect(() => {
+    const redirectPath = localStorage.getItem('redirectAfterLogin');
+    if (redirectPath) {
+      localStorage.removeItem('redirectAfterLogin');
+      navigate(redirectPath);
+    }
+  }, [navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

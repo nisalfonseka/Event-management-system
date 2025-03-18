@@ -10,7 +10,7 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredEvents, setFilteredEvents] = useState([]);
   const { isAuthenticated, user } = useAuth();
-  
+
   useEffect(() => {
     // Fetch public events from the API
     const fetchEvents = async () => {
@@ -95,7 +95,7 @@ const Home = () => {
     if (searchTerm.trim() === '') {
       setFilteredEvents(featuredEvents);
     } else {
-      const filtered = featuredEvents.filter(event => 
+      const filtered = featuredEvents.filter(event =>
         event.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredEvents(filtered);
@@ -121,12 +121,12 @@ const Home = () => {
     if (imagePath && (imagePath.startsWith('http://') || imagePath.startsWith('https://'))) {
       return imagePath;
     }
-    
+
     // If image path starts with '/uploads', prepend with backend URL
     if (imagePath && imagePath.startsWith('/uploads')) {
       return `http://localhost:5001${imagePath}`;
     }
-    
+
     // Return default image
     return 'https://via.placeholder.com/300x200?text=No+Image';
   };
@@ -136,26 +136,28 @@ const Home = () => {
   };
 
   const categories = [
-    'Technology', 'Business', 'Entertainment', 'Sports', 
+    'Technology', 'Business', 'Entertainment', 'Sports',
     'Education', 'Culinary', 'Arts', 'Health'
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-20 px-4">
+      <section
+        className="relative bg-cover bg-center text-white py-20 px-4"
+        style={{ backgroundImage: "url('img2.jpeg')" }}>
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-4">Discover Amazing Events</h1>
           <p className="text-xl mb-8">Find and manage the perfect events for every occasion</p>
           <form onSubmit={handleSearchSubmit} className="max-w-md mx-auto mb-8 flex">
-            <input 
-              type="text" 
-              placeholder="Search events..." 
+            <input
+              type="text"
+              placeholder="Search events..."
               className="flex-1 p-3 rounded-l-md focus:outline-none"
               value={searchTerm}
               onChange={handleSearchChange}
             />
-            <button 
+            <button
               type="submit"
               className="bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-r-md"
             >
@@ -164,8 +166,8 @@ const Home = () => {
           </form>
           <div className="flex flex-wrap justify-center gap-4">
             <Link to="/events" className="px-6 py-3 bg-white text-blue-600 font-medium rounded-md hover:bg-gray-100 transition">Browse Events</Link>
-            <Link 
-              to={isAuthenticated ? "/create-event" : "/login"} 
+            <Link
+              to={isAuthenticated ? "/create-event" : "/login"}
               className="px-6 py-3 bg-transparent border-2 border-white text-white font-medium rounded-md hover:bg-white hover:bg-opacity-10 transition"
             >
               {isAuthenticated ? "Create Event" : "Login to Create Event"}
@@ -191,9 +193,9 @@ const Home = () => {
               filteredEvents.map(event => (
                 <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:transform hover:scale-105" key={event._id}>
                   <div className="relative">
-                    <img 
-                      src={getImageUrl(event.image)} 
-                      alt={event.title} 
+                    <img
+                      src={getImageUrl(event.image)}
+                      alt={event.title}
                       className="w-full h-48 object-cover"
                       onError={handleImageError}
                     />
@@ -203,7 +205,7 @@ const Home = () => {
                     <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
                     <p className="text-gray-600 mb-1"><span className="font-medium">Date:</span> {formatDate(event.date)}</p>
                     <p className="text-gray-600 mb-4"><span className="font-medium">Location:</span> {event.location}</p>
-                    <Link 
+                    <Link
                       to={`/events/${event._id}`}
                       className="block text-center py-2 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition"
                     >
@@ -228,9 +230,9 @@ const Home = () => {
           <h2 className="text-3xl font-bold text-center mb-12">Event Categories</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {categories.map((category, index) => (
-              <Link 
-                to={isAuthenticated ? `/category/${category.toLowerCase()}` : "/login"} 
-                className="bg-white p-6 rounded-lg shadow-sm text-center hover:shadow-md transition" 
+              <Link
+                to={isAuthenticated ? `/category/${category.toLowerCase()}` : "/login"}
+                className="bg-white p-6 rounded-lg shadow-sm text-center hover:shadow-md transition"
                 key={index}
               >
                 <span className="font-medium text-gray-800">{category}</span>
@@ -269,14 +271,14 @@ const Home = () => {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to host your own event?</h2>
           <p className="text-xl mb-8">Create and manage events easily with our platform</p>
-          <Link 
-            to={isAuthenticated ? "/create-event" : "/login"} 
+          <Link
+            to={isAuthenticated ? "/create-event" : "/login"}
             className="px-8 py-4 bg-white text-indigo-600 font-medium rounded-md hover:bg-gray-100 transition inline-block mr-4"
           >
             {isAuthenticated ? "Get Started" : "Login to Get Started"}
           </Link>
-                    <Link to="/feedbackview" className="px-8 py-4 bg-white text-indigo-600 font-medium rounded-md hover:bg-gray-100 transition inline-block">Testimonial</Link>
-          
+          <Link to="/feedbackview" className="px-8 py-4 bg-white text-indigo-600 font-medium rounded-md hover:bg-gray-100 transition inline-block">Testimonial</Link>
+
         </div>
       </section>
     </div>

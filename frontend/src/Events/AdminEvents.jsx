@@ -48,8 +48,8 @@ const AdminEvents = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    navigate('/login');
     enqueueSnackbar('Logged out successfully', { variant: 'success' });
+    window.location.href = '/login'; // Replace navigate with direct URL redirect with refresh
   };
 
   const formatDate = (dateString) => {

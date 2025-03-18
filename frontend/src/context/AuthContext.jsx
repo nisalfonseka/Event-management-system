@@ -85,8 +85,10 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
-    navigate('/login');
     enqueueSnackbar('Logged out successfully', { variant: 'success' });
+    // Add page refresh
+    window.location.reload();
+    navigate('/login');
   };
 
   // Check if user is authenticated
