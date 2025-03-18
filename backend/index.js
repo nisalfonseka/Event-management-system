@@ -1,8 +1,15 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { PORT, mongoDBURL, JWT_SECRET } from './config.js';
 import authRoutes from './routes/authRoutes.js';
+import eventRoutes from './routes/eventRoutes.js';
+
+// Get directory name (ES module version of __dirname)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Set JWT_SECRET as an environment variable
 process.env.JWT_SECRET = JWT_SECRET;
@@ -17,10 +24,21 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Create uploads directory if it doesn't exist
+import fs from 'fs';
+import { dirname } from 'path';
+
+const uploadsDir = path.join(__dirname, 'uploads/events');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Routes
 app.use('/api/auth', authRoutes);
-// Fix for users endpoint - directly map to the getAllUsers route
-app.use('/api/users', authRoutes);
+app.use('/api/events', eventRoutes);
 
 // Default route
 app.get('/', (req, res) => {
