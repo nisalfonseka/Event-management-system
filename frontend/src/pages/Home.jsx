@@ -137,6 +137,7 @@ const Home = () => {
           <h2 className="text-3xl font-bold mb-4">Ready to host your own event?</h2>
           <p className="text-xl mb-8">Create and manage events easily with our platform</p>
           <Link to="/create-event" className="px-8 py-4 bg-white text-indigo-600 font-medium rounded-md hover:bg-gray-100 transition inline-block">Get Started</Link>
+
         </div>
       </section>
 

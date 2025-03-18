@@ -271,10 +271,12 @@ const Home = () => {
           <p className="text-xl mb-8">Create and manage events easily with our platform</p>
           <Link 
             to={isAuthenticated ? "/create-event" : "/login"} 
-            className="px-8 py-4 bg-white text-indigo-600 font-medium rounded-md hover:bg-gray-100 transition inline-block"
+            className="px-8 py-4 bg-white text-indigo-600 font-medium rounded-md hover:bg-gray-100 transition inline-block mr-4"
           >
             {isAuthenticated ? "Get Started" : "Login to Get Started"}
           </Link>
+                    <Link to="/feedbackview" className="px-8 py-4 bg-white text-indigo-600 font-medium rounded-md hover:bg-gray-100 transition inline-block">Testimonial</Link>
+          
         </div>
       </section>
     </div>
