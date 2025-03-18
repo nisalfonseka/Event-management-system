@@ -177,7 +177,43 @@ const EventRegistration = () => {
           </div>
 
           {/* Registration Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (!formData.agreeToTerms) {
+                enqueueSnackbar('You must agree to the terms and conditions', { variant: 'warning' });
+                return;
+              }
+              setSubmitting(true);
+              try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                  navigate('/login');
+                  return;
+                }
+                await axios.post(
+                  `http://localhost:5001/api/events/${id}/register`,
+                  {
+                    numberOfTickets: formData.numberOfTickets,
+                    specialRequirements: formData.specialRequirements
+                  },
+                  {
+                    headers: {
+                      Authorization: `Bearer ${token}`
+                    }
+                  }
+                );
+               
+                navigate('/payment'); // <-- Modified navigation
+              } catch (error) {
+                console.error('Error registering for event:', error);
+                enqueueSnackbar(error.response?.data?.message || 'Failed to register for event', { variant: 'error' });
+              } finally {
+                setSubmitting(false);
+              }
+            }}
+            className="space-y-6"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full Name</label>
