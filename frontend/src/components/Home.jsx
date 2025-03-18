@@ -1,67 +1,139 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import Header from './Header';
+import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
   const [featuredEvents, setFeaturedEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const { isAuthenticated, user } = useAuth();
   
   useEffect(() => {
-    // Simulate API call to fetch events
-    setTimeout(() => {
-      setFeaturedEvents([
-        {
-          id: 1,
-          title: 'Tech Conference 2023',
-          date: 'Oct 15, 2023',
-          location: 'San Francisco, CA',
-          image: 'img1.jpeg',
-          category: 'Technology'
-        },
-        {
-          id: 2,
-          title: 'Music Festival',
-          date: 'Nov 5, 2023',
-          location: 'Austin, TX',
-          image: 'img2.jpeg',
-          category: 'Entertainment'
-        },
-        {
-          id: 3,
-          title: 'Business Summit',
-          date: 'Dec 10, 2023',
-          location: 'New York, NY',
-          image: 'img3.jpeg',
-          category: 'Business'
-        },
-        {
-          id: 4,
-          title: 'Sports Championship',
-          date: 'Jan 20, 2024',
-          location: 'Chicago, IL',
-          image: 'img4.jpeg',
-          category: 'Sports'
-        },
-        {
-          id: 5,
-          title: 'Culinary Expo',
-          date: 'Feb 8, 2024',
-          location: 'Miami, FL',
-          image: 'img5.jpeg',
-          category: 'Culinary'
-        },
-        {
-          id: 6,
-          title: 'Education Workshop',
-          date: 'Mar 15, 2024',
-          location: 'Seattle, WA',
-          image: 'img6.jpeg',
-          category: 'Education'
+    // Fetch public events from the API
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get('http://localhost:5001/api/events/public');
+        if (response.data.success && response.data.events) {
+          setFeaturedEvents(response.data.events);
+        } else {
+          // Fallback to sample data if API returns no events
+          setFeaturedEvents([
+            {
+              _id: 1,
+              title: 'Tech Conference 2023',
+              date: new Date('2023-10-15'),
+              location: 'San Francisco, CA',
+              image: 'https://via.placeholder.com/300x200?text=Tech+Conference',
+              category: 'Technology',
+              isApproved: true
+            },
+            {
+              _id: 2,
+              title: 'Music Festival',
+              date: new Date('2023-11-05'),
+              location: 'Austin, TX',
+              image: 'https://via.placeholder.com/300x200?text=Music+Festival',
+              category: 'Entertainment',
+              isApproved: true
+            },
+            {
+              _id: 3,
+              title: 'Business Summit',
+              date: new Date('2023-12-10'),
+              location: 'New York, NY',
+              image: 'https://via.placeholder.com/300x200?text=Business+Summit',
+              category: 'Business',
+              isApproved: true
+            }
+          ]);
         }
-      ]);
-      setLoading(false);
-    }, 1000);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        // Set fallback data
+        setFeaturedEvents([
+          {
+            _id: 1,
+            title: 'Tech Conference 2023',
+            date: new Date('2023-10-15'),
+            location: 'San Francisco, CA',
+            image: 'https://via.placeholder.com/300x200?text=Tech+Conference',
+            category: 'Technology',
+            isApproved: true
+          },
+          {
+            _id: 2,
+            title: 'Music Festival',
+            date: new Date('2023-11-05'),
+            location: 'Austin, TX',
+            image: 'https://via.placeholder.com/300x200?text=Music+Festival',
+            category: 'Entertainment',
+            isApproved: true
+          },
+          {
+            _id: 3,
+            title: 'Business Summit',
+            date: new Date('2023-12-10'),
+            location: 'New York, NY',
+            image: 'https://via.placeholder.com/300x200?text=Business+Summit',
+            category: 'Business',
+            isApproved: true
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
   }, []);
+
+  useEffect(() => {
+    // When featuredEvents or searchTerm changes, update the filtered events
+    if (searchTerm.trim() === '') {
+      setFilteredEvents(featuredEvents);
+    } else {
+      const filtered = featuredEvents.filter(event => 
+        event.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredEvents(filtered);
+    }
+  }, [featuredEvents, searchTerm]);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    // The filtering happens automatically in the useEffect above
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const getImageUrl = (imagePath) => {
+    // If image path starts with 'http', it's already a full URL
+    if (imagePath && (imagePath.startsWith('http://') || imagePath.startsWith('https://'))) {
+      return imagePath;
+    }
+    
+    // If image path starts with '/uploads', prepend with backend URL
+    if (imagePath && imagePath.startsWith('/uploads')) {
+      return `http://localhost:5001${imagePath}`;
+    }
+    
+    // Return default image
+    return 'https://via.placeholder.com/300x200?text=No+Image';
+  };
+
+  const handleImageError = (e) => {
+    e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+  };
 
   const categories = [
     'Technology', 'Business', 'Entertainment', 'Sports', 
@@ -70,20 +142,34 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Use the Header component */}
-      
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-4">Discover Amazing Events</h1>
           <p className="text-xl mb-8">Find and manage the perfect events for every occasion</p>
-          <div className="max-w-md mx-auto mb-8 flex">
-            <input type="text" placeholder="Search events..." className="flex-1 p-3 rounded-l-md focus:outline-none" />
-            <button className="bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-r-md">Search</button>
-          </div>
+          <form onSubmit={handleSearchSubmit} className="max-w-md mx-auto mb-8 flex">
+            <input 
+              type="text" 
+              placeholder="Search events..." 
+              className="flex-1 p-3 rounded-l-md focus:outline-none"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <button 
+              type="submit"
+              className="bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-r-md"
+            >
+              Search
+            </button>
+          </form>
           <div className="flex flex-wrap justify-center gap-4">
             <Link to="/events" className="px-6 py-3 bg-white text-blue-600 font-medium rounded-md hover:bg-gray-100 transition">Browse Events</Link>
-            <Link to="/create-event" className="px-6 py-3 bg-transparent border-2 border-white text-white font-medium rounded-md hover:bg-white hover:bg-opacity-10 transition">Create Event</Link>
+            <Link 
+              to={isAuthenticated ? "/create-event" : "/login"} 
+              className="px-6 py-3 bg-transparent border-2 border-white text-white font-medium rounded-md hover:bg-white hover:bg-opacity-10 transition"
+            >
+              {isAuthenticated ? "Create Event" : "Login to Create Event"}
+            </Link>
           </div>
         </div>
       </section>
@@ -91,22 +177,36 @@ const Home = () => {
       {/* Featured Events */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Featured Events</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">
+            {searchTerm ? `Search Results: "${searchTerm}"` : "Featured Events"}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {loading ? (
               <p className="col-span-full text-center text-gray-500">Loading events...</p>
+            ) : filteredEvents.length === 0 ? (
+              <p className="col-span-full text-center text-gray-500">
+                {searchTerm ? `No events found matching "${searchTerm}"` : "No events available"}
+              </p>
             ) : (
-              featuredEvents.map(event => (
-                <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:transform hover:scale-105" key={event.id}>
+              filteredEvents.map(event => (
+                <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:transform hover:scale-105" key={event._id}>
                   <div className="relative">
-                    <img src={event.image} alt={event.title} className="w-full h-48 object-cover" />
+                    <img 
+                      src={getImageUrl(event.image)} 
+                      alt={event.title} 
+                      className="w-full h-48 object-cover"
+                      onError={handleImageError}
+                    />
                     <span className="absolute top-4 left-4 bg-blue-500 text-white text-sm py-1 px-3 rounded-full">{event.category}</span>
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                    <p className="text-gray-600 mb-1"><span className="font-medium">Date:</span> {event.date}</p>
+                    <p className="text-gray-600 mb-1"><span className="font-medium">Date:</span> {formatDate(event.date)}</p>
                     <p className="text-gray-600 mb-4"><span className="font-medium">Location:</span> {event.location}</p>
-                    <Link to={`/event/${event.id}`} className="block text-center py-2 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition">
+                    <Link 
+                      to={isAuthenticated ? `/events/${event._id}` : "/login"} 
+                      className="block text-center py-2 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition"
+                    >
                       View Details
                     </Link>
                   </div>
@@ -114,9 +214,11 @@ const Home = () => {
               ))
             )}
           </div>
-          <div className="text-center mt-10">
-            <Link to="/events" className="text-blue-600 font-medium hover:underline">View All Events →</Link>
-          </div>
+          {isAuthenticated && (
+            <div className="text-center mt-10">
+              <Link to="/my-events" className="text-blue-600 font-medium hover:underline">View My Events →</Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -126,7 +228,11 @@ const Home = () => {
           <h2 className="text-3xl font-bold text-center mb-12">Event Categories</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {categories.map((category, index) => (
-              <Link to={`/category/${category.toLowerCase()}`} className="bg-white p-6 rounded-lg shadow-sm text-center hover:shadow-md transition" key={index}>
+              <Link 
+                to={isAuthenticated ? `/category/${category.toLowerCase()}` : "/login"} 
+                className="bg-white p-6 rounded-lg shadow-sm text-center hover:shadow-md transition" 
+                key={index}
+              >
                 <span className="font-medium text-gray-800">{category}</span>
               </Link>
             ))}
@@ -163,19 +269,12 @@ const Home = () => {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to host your own event?</h2>
           <p className="text-xl mb-8">Create and manage events easily with our platform</p>
-          <Link to="/create-event" className="px-8 py-4 bg-white text-indigo-600 font-medium rounded-md hover:bg-gray-100 transition inline-block">Get Started</Link>
-        </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="py-16 px-4 bg-gray-100">
-        <div className="max-w-xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
-          <p className="text-gray-600 mb-8">Subscribe to get notified about upcoming events</p>
-          <div className="flex max-w-md mx-auto">
-            <input type="email" placeholder="Enter your email" className="flex-1 p-3 rounded-l-md focus:outline-none" />
-            <button className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-r-md px-6">Subscribe</button>
-          </div>
+          <Link 
+            to={isAuthenticated ? "/create-event" : "/login"} 
+            className="px-8 py-4 bg-white text-indigo-600 font-medium rounded-md hover:bg-gray-100 transition inline-block"
+          >
+            {isAuthenticated ? "Get Started" : "Login to Get Started"}
+          </Link>
         </div>
       </section>
     </div>
