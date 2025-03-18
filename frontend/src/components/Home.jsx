@@ -15,7 +15,7 @@ const Home = () => {
           title: 'Tech Conference 2023',
           date: 'Oct 15, 2023',
           location: 'San Francisco, CA',
-          image: 'img1.jpeg',
+          image: 'https://via.placeholder.com/300x200?text=Tech+Conference',
           category: 'Technology'
         },
         {
@@ -23,7 +23,7 @@ const Home = () => {
           title: 'Music Festival',
           date: 'Nov 5, 2023',
           location: 'Austin, TX',
-          image: 'img2.jpeg',
+          image: 'https://via.placeholder.com/300x200?text=Music+Festival',
           category: 'Entertainment'
         },
         {
@@ -31,32 +31,8 @@ const Home = () => {
           title: 'Business Summit',
           date: 'Dec 10, 2023',
           location: 'New York, NY',
-          image: 'img3.jpeg',
+          image: 'https://via.placeholder.com/300x200?text=Business+Summit',
           category: 'Business'
-        },
-        {
-          id: 4,
-          title: 'Sports Championship',
-          date: 'Jan 20, 2024',
-          location: 'Chicago, IL',
-          image: 'img4.jpeg',
-          category: 'Sports'
-        },
-        {
-          id: 5,
-          title: 'Culinary Expo',
-          date: 'Feb 8, 2024',
-          location: 'Miami, FL',
-          image: 'img5.jpeg',
-          category: 'Culinary'
-        },
-        {
-          id: 6,
-          title: 'Education Workshop',
-          date: 'Mar 15, 2024',
-          location: 'Seattle, WA',
-          image: 'img6.jpeg',
-          category: 'Education'
         }
       ]);
       setLoading(false);

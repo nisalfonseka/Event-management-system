@@ -9,6 +9,7 @@ import AdminUsers from './User/AdminUsers';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
+import PaymentCart from './pages/payment/PaymentCart';
 
 const App = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ const App = () => {
             <Route path='/' element={<Home />} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
+            <Route path='/payment' element={<PaymentCart />} />
             
             {/* User routes */}
             <Route element={<ProtectedRoute />}>
