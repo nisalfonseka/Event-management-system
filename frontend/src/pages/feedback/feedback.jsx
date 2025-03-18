@@ -5,7 +5,6 @@ const feedback = () => {
     name: "",
     email: "",
     message: "",
-    rating: "",
   });
 
   const handleChange = (e) => {
@@ -16,7 +15,7 @@ const feedback = () => {
     e.preventDefault();
     console.log("Feedback Submitted:", feedback);
     alert("Thank you for your feedback!");
-    setFeedback({ name: "", email: "", message: "", rating: "" });
+    setFeedback({ name: "", email: "", message: ""});
   };
 
   const pageStyle = {
@@ -106,23 +105,8 @@ const feedback = () => {
           required
         />
 
-        <label style={labelStyle} htmlFor="rating">Rating:</label>
-        <select
-          id="rating"
-          name="rating"
-          value={feedback.rating}
-          onChange={handleChange}
-          style={inputStyle}
-          required
-        >
-          <option value="">Select Rating</option>
-          <option value="1">1 - Poor</option>
-          <option value="2">2 - Fair</option>
-          <option value="3">3 - Good</option>
-          <option value="4">4 - Very Good</option>
-          <option value="5">5 - Excellent</option>
-        </select>
-
+       
+       
         <label style={labelStyle} htmlFor="message">Message:</label>
         <textarea
           id="message"
