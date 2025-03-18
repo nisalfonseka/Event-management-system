@@ -12,24 +12,28 @@ const BrowseEvents = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    fetchAllEvents();
+    fetchEvents();
   }, []);
 
-  const fetchAllEvents = async () => {
+  const fetchEvents = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      setError(null);
+      const token = localStorage.getItem('token');
       
-      const response = await axios.get('http://localhost:5001/api/events/public');
+      let url = 'http://localhost:5001/api/events';
+      let headers = {};
       
-      if (response.data.success && response.data.events) {
-        setEvents(response.data.events);
+      // Use different endpoint based on authentication status
+      if (token) {
+        headers = { Authorization: `Bearer ${token}` };
       } else {
-        throw new Error('Failed to fetch events');
+        url = 'http://localhost:5001/api/events/public';
       }
+
+      const response = await axios.get(url, { headers });
+      setEvents(response.data.events || []);
     } catch (error) {
       console.error('Error fetching events:', error);
-      setError('Failed to load events. Please try again later.');
       enqueueSnackbar('Failed to load events', { variant: 'error' });
     } finally {
       setLoading(false);
@@ -73,7 +77,7 @@ const BrowseEvents = () => {
       <div className="min-h-screen flex flex-col items-center justify-center p-6">
         <p className="text-red-500 mb-4">{error}</p>
         <button 
-          onClick={fetchAllEvents} 
+          onClick={fetchEvents} 
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           Try Again
@@ -121,7 +125,7 @@ const BrowseEvents = () => {
                 <p className="text-gray-600 mb-1"><span className="font-medium">Time:</span> {event.time}</p>
                 <p className="text-gray-600 mb-4"><span className="font-medium">Location:</span> {event.location}</p>
                 <Link 
-                  to={isAuthenticated ? `/events/${event._id}` : "/login"} 
+                  to={`/events/${event._id}`}
                   className="block text-center py-2 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition"
                 >
                   View Details

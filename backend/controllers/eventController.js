@@ -164,6 +164,63 @@ export const getEvent = async (req, res) => {
   }
 };
 
+// Get single event (public access)
+export const getPublicEvent = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id)
+      .populate('organizer', 'username email')
+      .populate('attendees', 'username email');
+    
+    if (!event) {
+      return res.status(404).json({
+        success: false,
+        message: 'Event not found'
+      });
+    }
+
+    // For public access, only show approved events
+    if (!event.isApproved) {
+      return res.status(404).json({
+        success: false,
+        message: 'Event not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      event
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch event',
+      error: error.message
+    });
+  }
+};
+
+// Get all public events (no authentication required)
+export const getPublicEvents = async (req, res) => {
+  try {
+    // Only show approved events to the public
+    const events = await Event.find({ isApproved: true })
+      .populate('organizer', 'username email')
+      .sort({ createdAt: -1 });
+    
+    res.status(200).json({
+      success: true,
+      count: events.length,
+      events
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch events',
+      error: error.message
+    });
+  }
+};
+
 // Update event
 export const updateEvent = async (req, res) => {
   try {

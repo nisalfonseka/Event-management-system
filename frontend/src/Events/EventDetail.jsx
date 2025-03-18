@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
+import { useAuth } from '../context/AuthContext';
 
 const EventDetail = () => {
   const { id } = useParams();
@@ -9,6 +10,7 @@ const EventDetail = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
     fetchEventDetails();
@@ -16,23 +18,13 @@ const EventDetail = () => {
 
   const fetchEventDetails = async () => {
     try {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-
-      const response = await axios.get(`http://localhost:5001/api/events/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
+      // Remove token requirement check
+      const response = await axios.get(`http://localhost:5001/api/events/${id}`);
       setEvent(response.data.event);
     } catch (error) {
       console.error('Error fetching event details:', error);
       enqueueSnackbar('Failed to load event details', { variant: 'error' });
+      navigate('/events');
     } finally {
       setLoading(false);
     }
@@ -58,36 +50,23 @@ const EventDetail = () => {
     return 'https://via.placeholder.com/800x400?text=Event+Image';
   };
 
-  const handleRegisterForEvent = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-
-      await axios.post(`http://localhost:5001/api/events/${id}/register`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      enqueueSnackbar('Successfully registered for the event!', { variant: 'success' });
-      fetchEventDetails(); // Refresh event data to update attendee status
-    } catch (error) {
-      console.error('Error registering for event:', error);
-      enqueueSnackbar(error.response?.data?.message || 'Failed to register for event', { variant: 'error' });
+  const handleRegisterForEvent = () => {
+    // Redirect to login if not authenticated
+    if (!isAuthenticated) {
+      enqueueSnackbar('Please log in to register for this event', { variant: 'info' });
+      navigate('/login');
+      return;
     }
+
+    // If authenticated, proceed to registration page
+    navigate(`/events/${id}/register`);
   };
 
   const isUserRegistered = () => {
-    if (!event || !event.attendees) {
+    if (!isAuthenticated || !event || !event.attendees) {
       return false;
     }
     
-    // Get user info from local storage
-    const user = JSON.parse(localStorage.getItem('user')) || {};
     return event.attendees.some(attendee => attendee._id === user.id);
   };
 
@@ -197,23 +176,34 @@ const EventDetail = () => {
           </div>
           
           <div className="flex flex-wrap justify-between items-center">
-            <Link to="/my-events" className="text-blue-600 hover:underline mb-2">
-              &larr; Back to My Events
+            <Link to="/events" className="text-blue-600 hover:underline mb-2">
+              &larr; Back to Events
             </Link>
             <div className="space-x-2">
-              {event.isApproved && !isUserRegistered() && (
+              {isAuthenticated ? (
+                <>
+                  {event?.isApproved && !isUserRegistered() && (
+                    <button 
+                      onClick={handleRegisterForEvent} 
+                      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300"
+                      disabled={event.attendees?.length >= event.capacity}
+                    >
+                      {event.attendees?.length >= event.capacity ? 'Event Full' : 'Register'}
+                    </button>
+                  )}
+                  {isUserRegistered() && (
+                    <span className="px-4 py-2 bg-green-100 text-green-800 rounded">
+                      Registered
+                    </span>
+                  )}
+                </>
+              ) : (
                 <button 
-                  onClick={() => navigate(`/events/${id}/register`)} 
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300"
-                  disabled={event.attendees?.length >= event.capacity}
+                  onClick={handleRegisterForEvent}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
-                  {event.attendees?.length >= event.capacity ? 'Event Full' : 'Register'}
+                  Login to Register
                 </button>
-              )}
-              {isUserRegistered() && (
-                <span className="px-4 py-2 bg-green-100 text-green-800 rounded">
-                  Registered
-                </span>
               )}
             </div>
           </div>

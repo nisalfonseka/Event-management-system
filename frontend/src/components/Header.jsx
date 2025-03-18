@@ -15,9 +15,7 @@ const Header = () => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <span className="text-white">Event</span>
-          <span className="text-white">Hub</span>
-          <span className="ml-1 text-sm font-normal tracking-normal align-top bg-gray-800 text-white px-2 py-1 rounded-md">Pro</span>
+          <span className="text-white">Bloomz</span>
         </Link>
         
         <nav className="w-full md:w-auto">

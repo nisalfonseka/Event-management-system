@@ -204,7 +204,7 @@ const Home = () => {
                     <p className="text-gray-600 mb-1"><span className="font-medium">Date:</span> {formatDate(event.date)}</p>
                     <p className="text-gray-600 mb-4"><span className="font-medium">Location:</span> {event.location}</p>
                     <Link 
-                      to={isAuthenticated ? `/events/${event._id}` : "/login"} 
+                      to={`/events/${event._id}`}
                       className="block text-center py-2 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition"
                     >
                       View Details

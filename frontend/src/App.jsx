@@ -40,6 +40,7 @@ const App = () => {
             <Route path='/register' element={<Register />} />
             <Route path='/payment' element={<PaymentCart />} />
             <Route path='/events' element={<BrowseEvents />} />
+            <Route path='/events/:id' element={<EventDetail />} /> {/* Make sure this is outside of ProtectedRoute */}
             { <Route path='/feedback' element={<Feedback />} /> }
             { <Route path='/managefeedback' element={<Managefeedback />} /> }
             { <Route path='/feedbackview' element={<Feedbackview />} /> }
@@ -49,7 +50,6 @@ const App = () => {
               <Route path='/dashboard' element={<UserDashboard />} />
               <Route path='/create-event' element={<CreateEvent />} />
               <Route path='/my-events' element={<MyEvents />} />
-              <Route path='/events/:id' element={<EventDetail />} />
               <Route path='/events/:id/edit' element={<CreateEvent />} />
               <Route path="/events/:id/register" element={<EventRegistration />} />
             </Route>

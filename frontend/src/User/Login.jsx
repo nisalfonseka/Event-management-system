@@ -37,7 +37,7 @@ const Login = () => {
         if (response.data.user.role === 'admin') {
           navigate('/admin-dashboard');
         } else {
-          navigate('/dashboard');
+          navigate('/'); // Redirect regular users to home page instead of dashboard
         }
       }
     } catch (error) {
