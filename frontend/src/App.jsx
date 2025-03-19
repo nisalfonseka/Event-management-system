@@ -13,9 +13,8 @@ import PaymentCart from './pages/payment/PaymentCart';
 import Feedback from './pages/feedback/feedback';
 import Managefeedback from './pages/feedback/managefeedback';
 import Feedbackview from './pages/feedback/feedbackview';
-
-
-
+import UpdateProfile from './User/UpdateProfile';
+import AdminUpdateProfile from './User/AdminUpdateProfile';
 // Import Event Components
 import CreateEvent from './Events/CreateEvent';
 import MyEvents from './Events/MyEvents';
@@ -40,14 +39,15 @@ const App = () => {
             <Route path='/register' element={<Register />} />
             <Route path='/payment' element={<PaymentCart />} />
             <Route path='/events' element={<BrowseEvents />} />
-            <Route path='/events/:id' element={<EventDetail />} /> {/* Make sure this is outside of ProtectedRoute */}
-            { <Route path='/feedback' element={<Feedback />} /> }
-            { <Route path='/managefeedback' element={<Managefeedback />} /> }
-            { <Route path='/feedbackview' element={<Feedbackview />} /> }
+            <Route path='/events/:id' element={<EventDetail />} />
+            <Route path='/feedback' element={<Feedback />} />
+            <Route path='/managefeedback' element={<Managefeedback />} />
+            <Route path='/feedbackview' element={<Feedbackview />} />
 
             {/* User routes */}
             <Route element={<ProtectedRoute />}>
               <Route path='/dashboard' element={<UserDashboard />} />
+              <Route path='/update-profile' element={<UpdateProfile />} />
               <Route path='/create-event' element={<CreateEvent />} />
               <Route path='/my-events' element={<MyEvents />} />
               <Route path='/events/:id/edit' element={<CreateEvent />} />
@@ -60,6 +60,7 @@ const App = () => {
               <Route path='/admin/users' element={<AdminUsers />} />
               <Route path='/admin/events' element={<AdminEvents />} />
               <Route path='/admin/approvals' element={<AdminEvents />} />
+              <Route path='/admin/profile' element={<AdminUpdateProfile />} />
               <Route path='/admin/events/:id' element={<EventDetail />} />
             </Route>
           </Routes>
@@ -70,3 +71,4 @@ const App = () => {
 };
 
 export default App;
+
