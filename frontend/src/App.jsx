@@ -29,6 +29,7 @@ import BrowseEvents from './Events/BrowseEvents';
 import EventRegistration from './Events/EventRegistration';
 import UpdateFeedback from './pages/feedback/UpdateFeedback';
 import UserFeedbackView from './pages/feedback/UserFeedbackView';
+import EditEvent from './Events/EditEvent';
 
 const App = () => {
   const location = useLocation();
@@ -60,7 +61,7 @@ const App = () => {
               <Route path='/update-profile' element={<UpdateProfile />} />
               <Route path='/create-event' element={<CreateEvent />} />
               <Route path='/my-events' element={<MyEvents />} />
-              <Route path='/events/:id/edit' element={<CreateEvent />} />
+              <Route path='/events/:id/edit' element={<EditEvent />} />
               <Route path="/events/:id/register" element={<EventRegistration />} />
               <Route path="/payments/history" element={<UserPaymentHistory />} />
               <Route path="/payments/:paymentId/edit" element={<EditPayment />} />

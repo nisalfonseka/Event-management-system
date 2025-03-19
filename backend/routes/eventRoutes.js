@@ -31,7 +31,7 @@ router.post('/:id/register', protect, registerForEvent);
 
 // Routes with dynamic parameters should come last
 router.get('/:id', getEvent);
-router.put('/:id', protect, updateEvent);
+router.put('/:id', protect, upload.single('image'), updateEvent);
 router.delete('/:id', protect, deleteEvent);
 
 export default router;
