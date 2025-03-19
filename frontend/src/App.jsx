@@ -27,6 +27,8 @@ import AdminEvents from './Events/AdminEvents';
 import EventDetail from './Events/EventDetail';
 import BrowseEvents from './Events/BrowseEvents';
 import EventRegistration from './Events/EventRegistration';
+import UpdateFeedback from './pages/feedback/UpdateFeedback';
+import UserFeedbackView from './pages/feedback/UserFeedbackView';
 
 const App = () => {
   const location = useLocation();
@@ -49,6 +51,8 @@ const App = () => {
             <Route path='/feedback' element={<Feedback />} />
             <Route path='/managefeedback' element={<Managefeedback />} />
             <Route path='/feedbackview' element={<Feedbackview />} />
+            <Route path='/update-feedback' element={<UpdateFeedback />} />
+            <Route path='/user-feedback' element={<UserFeedbackView />} />
 
             {/* User routes */}
             <Route element={<ProtectedRoute />}>
@@ -81,4 +85,5 @@ const App = () => {
 };
 
 export default App;
+
 

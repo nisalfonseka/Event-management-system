@@ -1,21 +1,29 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useSnackbar } from "notistack";
 
-const feedback = () => {
+const Feedback = () => {
   const [feedback, setFeedback] = useState({
     name: "",
     email: "",
     message: "",
   });
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleChange = (e) => {
     setFeedback({ ...feedback, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Feedback Submitted:", feedback);
-    alert("Thank you for your feedback!");
-    setFeedback({ name: "", email: "", message: ""});
+    try {
+      await axios.post('http://localhost:5001/api/feedback', feedback);
+      enqueueSnackbar('Feedback submitted successfully!', { variant: 'success' });
+      setFeedback({ name: "", email: "", message: "" });
+    } catch (error) {
+      enqueueSnackbar('Failed to submit feedback', { variant: 'error' });
+    }
   };
 
   const pageStyle = {
@@ -130,4 +138,4 @@ const feedback = () => {
   );
 };
 
-export default feedback;
+export default Feedback;

@@ -143,6 +143,17 @@ const UserDashboard = () => {
                   </div>
                 </div>
               </div>
+
+              <div className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="px-4 py-5 sm:p-6">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">My Feedback</h3>
+                  <div className="mt-5">
+                    <Link to="/user-feedback" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+                      View Feedback
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
