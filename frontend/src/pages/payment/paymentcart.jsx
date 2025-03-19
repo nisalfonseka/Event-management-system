@@ -338,6 +338,7 @@ function PaymentForm() {
               type="button"
               className="cancel-btn"
               onClick={() => navigate(-1)}
+              style={{ backgroundColor: '#6c757d', color: 'white', border: 'none' }}
             >
               Cancel
             </button>
@@ -345,6 +346,7 @@ function PaymentForm() {
               type="submit"
               className="pay-btn"
               disabled={isSubmitting}
+              style={{ backgroundColor: '#28a745', color: 'white', border: 'none' }}
             >
               {isSubmitting ? (
                 <>
