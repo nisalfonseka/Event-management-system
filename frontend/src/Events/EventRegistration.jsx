@@ -15,7 +15,6 @@ const EventRegistration = () => {
     fullName: '',
     email: '',
     contactNumber: '',
-    numberOfTickets: 1,
     specialRequirements: '',
     agreeToTerms: false
   });
@@ -83,8 +82,8 @@ const EventRegistration = () => {
       eventTime: event.time,
       eventLocation: event.location,
       ticketPrice: event.price,
-      numberOfTickets: formData.numberOfTickets,
-      totalAmount: event.price * formData.numberOfTickets,
+      numberOfTickets: 1, // Fixed to 1 ticket
+      totalAmount: event.price, // Calculating for 1 ticket
       fullName: formData.fullName,
       email: formData.email,
       contactNumber: formData.contactNumber,
@@ -167,6 +166,15 @@ const EventRegistration = () => {
               <span className="font-medium">Available Spots: </span>
               <span>{event.capacity - (event.attendees?.length || 0)} of {event.capacity}</span>
             </div>
+            
+            {/* Enhanced Price Display */}
+            <div className="mt-3 p-2 bg-blue-100 rounded border border-blue-200">
+              <div className="text-center">
+                <span className="text-lg font-bold text-blue-700">
+                  {event.price > 0 ? `Registration Fee: $${event.price.toFixed(2)}` : 'Free Registration'}
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* Registration Form */}
@@ -214,26 +222,6 @@ const EventRegistration = () => {
                   required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
-              </div>
-              
-              <div>
-                <label htmlFor="numberOfTickets" className="block text-sm font-medium text-gray-700">Number of Tickets</label>
-                <input
-                  type="number"
-                  id="numberOfTickets"
-                  name="numberOfTickets"
-                  min="1"
-                  max={event.capacity - (event.attendees?.length || 0)}
-                  value={formData.numberOfTickets}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-                {event.price > 0 && (
-                  <p className="mt-1 text-sm text-gray-500">
-                    Total: ${(event.price * formData.numberOfTickets).toFixed(2)}
-                  </p>
-                )}
               </div>
             </div>
 
