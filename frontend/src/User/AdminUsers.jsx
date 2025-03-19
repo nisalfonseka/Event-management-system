@@ -78,12 +78,12 @@ const AdminUsers = () => {
           <Link to="/admin/events" className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-gray-100">
             <span className="ml-3">Events</span>
           </Link>
-          <Link to="/admin/approvals" className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-gray-100">
-            <span className="ml-3">Approvals</span>
-          </Link>
-          <Link to="/admin/settings" className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-gray-100">
-            <span className="ml-3">Settings</span>
-          </Link>
+         <Link to="/admin/payment-approvals" className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-gray-100">
+                     <span className="ml-3">Payment Approvals</span>
+                   </Link>
+           <Link to="/managefeedback" className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-gray-100">
+                      <span className="ml-3">Feedback Manage</span>
+                    </Link>
           <button 
             onClick={handleLogout} 
             className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-gray-100 w-full text-left"
