@@ -60,24 +60,26 @@ function PaymentApproval() {
       });
       
       if (response.data.success) {
-        const allPayments = response.data.payments.map(payment => ({
-          id: payment._id,
-          amount: payment.amount,
-          cardHolder: payment.cardDetails.cardHolder,
-          timestamp: payment.timestamp,
-          status: payment.status,
-          numberOfTickets: payment.numberOfTickets || 1,
-          event: {
-            id: payment.event._id,
-            name: payment.event.title,
-            date: payment.event.date
-          },
-          user: {
-            id: payment.user._id,
-            name: payment.user.username,
-            email: payment.user.email
-          }
-        }));
+        const allPayments = response.data.payments
+          .filter(payment => payment !== null && payment !== undefined)
+          .map(payment => ({
+            id: payment._id,
+            amount: payment.amount,
+            cardHolder: payment.cardDetails.cardHolder,
+            timestamp: payment.timestamp,
+            status: payment.status,
+            numberOfTickets: payment.numberOfTickets || 1,
+            event: {
+              id: payment.event?._id,
+              name: payment.event?.title,
+              date: payment.event?.date
+            },
+            user: {
+              id: payment.user?._id,
+              name: payment.user?.username,
+              email: payment.user?.email
+            }
+          }));
         
         setPayments(allPayments);
         setFilteredPayments(allPayments);
