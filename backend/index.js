@@ -6,7 +6,8 @@ import { fileURLToPath } from 'url';
 import { PORT, mongoDBURL, JWT_SECRET } from './config.js';
 import authRoutes from './routes/authRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
-import paymentRoutes from './routes/paymentRoutes.js';  // Add this line to import payment routes
+import paymentRoutes from './routes/paymentRoutes.js';
+import feedbackRoutes from './routes/feedback.js';  // Add feedback routes import
 
 // Get directory name (ES module version of __dirname)
 const __filename = fileURLToPath(import.meta.url);
@@ -39,7 +40,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
-app.use('/api/payments', paymentRoutes);  // Add this line to configure payment routes
+app.use('/api/payments', paymentRoutes);
+app.use('/api/feedback', feedbackRoutes);  // Configure feedback routes
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
