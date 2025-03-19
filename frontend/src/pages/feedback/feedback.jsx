@@ -9,14 +9,70 @@ const Feedback = () => {
     message: "",
   });
 
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
   const { enqueueSnackbar } = useSnackbar();
 
+  const validateForm = () => {
+    let tempErrors = {};
+    let isValid = true;
+
+    // Name validation
+    if (!feedback.name.trim()) {
+      tempErrors.name = "Name is required";
+      isValid = false;
+    } else if (feedback.name.length < 2) {
+      tempErrors.name = "Name must be at least 2 characters long";
+      isValid = false;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!feedback.email) {
+      tempErrors.email = "Email is required";
+      isValid = false;
+    } else if (!emailRegex.test(feedback.email)) {
+      tempErrors.email = "Please enter a valid email address";
+      isValid = false;
+    }
+
+    // Message validation
+    if (!feedback.message.trim()) {
+      tempErrors.message = "Message is required";
+      isValid = false;
+    } else if (feedback.message.length < 10) {
+      tempErrors.message = "Message must be at least 10 characters long";
+      isValid = false;
+    } else if (feedback.message.length > 500) {
+      tempErrors.message = "Message cannot exceed 500 characters";
+      isValid = false;
+    }
+
+    setErrors(tempErrors);
+    return isValid;
+  };
+
   const handleChange = (e) => {
-    setFeedback({ ...feedback, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFeedback({ ...feedback, [name]: value });
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: "" });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      enqueueSnackbar('Please fix the errors in the form', { variant: 'error' });
+      return;
+    }
+
     try {
       await axios.post('http://localhost:5001/api/feedback', feedback);
       enqueueSnackbar('Feedback submitted successfully!', { variant: 'success' });
@@ -86,6 +142,14 @@ const Feedback = () => {
     backgroundColor: "#0056b3",
   };
 
+  const errorStyle = {
+    color: "#dc2626",
+    fontSize: "12px",
+    marginTop: "-10px",
+    marginBottom: "10px",
+    textAlign: "left",
+  };
+
   return (
     <div style={pageStyle}>
       <form style={formStyle} onSubmit={handleSubmit}>
@@ -101,6 +165,7 @@ const Feedback = () => {
           style={inputStyle}
           required
         />
+        {errors.name && <div style={errorStyle}>{errors.name}</div>}
 
         <label style={labelStyle} htmlFor="email">Email:</label>
         <input
@@ -112,9 +177,8 @@ const Feedback = () => {
           style={inputStyle}
           required
         />
+        {errors.email && <div style={errorStyle}>{errors.email}</div>}
 
-       
-       
         <label style={labelStyle} htmlFor="message">Message:</label>
         <textarea
           id="message"
@@ -124,6 +188,7 @@ const Feedback = () => {
           style={textareaStyle}
           required
         />
+        {errors.message && <div style={errorStyle}>{errors.message}</div>}
 
         <button
           type="submit"

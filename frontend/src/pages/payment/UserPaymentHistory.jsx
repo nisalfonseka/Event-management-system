@@ -52,6 +52,18 @@ function UserPaymentHistory() {
     }
   };
 
+  // Helper function to safely display event data
+  const getEventTitle = (payment) => {
+    return payment.event?.title || 'Untitled Event';
+  };
+
+  const getEventDate = (payment) => {
+    if (payment.event?.date) {
+      return new Date(payment.event.date).toLocaleDateString();
+    }
+    return 'Date not available';
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -99,8 +111,8 @@ function UserPaymentHistory() {
                 {payments.map((payment) => (
                   <tr key={payment._id}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{payment.event.title}</div>
-                      <div className="text-sm text-gray-500">{new Date(payment.event.date).toLocaleDateString()}</div>
+                      <div className="text-sm font-medium text-gray-900">{getEventTitle(payment)}</div>
+                      <div className="text-sm text-gray-500">{getEventDate(payment)}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">LKR {payment.amount.toFixed(2)}</div>
