@@ -15,6 +15,11 @@ import Managefeedback from './pages/feedback/managefeedback';
 import Feedbackview from './pages/feedback/feedbackview';
 import UpdateProfile from './User/UpdateProfile';
 import AdminUpdateProfile from './User/AdminUpdateProfile';
+import PendingApproval from './pages/payment/PendingApproval';
+import PaymentApproval from './pages/admin/PaymentApproval';
+import PaymentDetails from './pages/admin/PaymentDetails';
+import UserPaymentHistory from './pages/payment/UserPaymentHistory';
+import EditPayment from './pages/payment/EditPayment';
 // Import Event Components
 import CreateEvent from './Events/CreateEvent';
 import MyEvents from './Events/MyEvents';
@@ -38,6 +43,7 @@ const App = () => {
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
             <Route path='/payment' element={<PaymentCart />} />
+            <Route path='/pending-approval' element={<PendingApproval />} />
             <Route path='/events' element={<BrowseEvents />} />
             <Route path='/events/:id' element={<EventDetail />} />
             <Route path='/feedback' element={<Feedback />} />
@@ -52,6 +58,8 @@ const App = () => {
               <Route path='/my-events' element={<MyEvents />} />
               <Route path='/events/:id/edit' element={<CreateEvent />} />
               <Route path="/events/:id/register" element={<EventRegistration />} />
+              <Route path="/payments/history" element={<UserPaymentHistory />} />
+              <Route path="/payments/:paymentId/edit" element={<EditPayment />} />
             </Route>
             
             {/* Admin routes */}
@@ -60,6 +68,8 @@ const App = () => {
               <Route path='/admin/users' element={<AdminUsers />} />
               <Route path='/admin/events' element={<AdminEvents />} />
               <Route path='/admin/approvals' element={<AdminEvents />} />
+              <Route path='/admin/payment-approvals' element={<PaymentApproval />} />
+              <Route path='/admin/payments/:id' element={<PaymentDetails />} />
               <Route path='/admin/profile' element={<AdminUpdateProfile />} />
               <Route path='/admin/events/:id' element={<EventDetail />} />
             </Route>

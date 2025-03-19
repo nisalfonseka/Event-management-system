@@ -75,36 +75,29 @@ const EventRegistration = () => {
       return;
     }
 
-    setSubmitting(true);
-    try {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        navigate('/login');
-        return;
-      }
+    // Collect registration data to pass to payment page
+    const registrationData = {
+      eventId: id,
+      eventName: event.title,
+      eventDate: event.date,
+      eventTime: event.time,
+      eventLocation: event.location,
+      ticketPrice: event.price,
+      numberOfTickets: formData.numberOfTickets,
+      totalAmount: event.price * formData.numberOfTickets,
+      fullName: formData.fullName,
+      email: formData.email,
+      contactNumber: formData.contactNumber,
+      specialRequirements: formData.specialRequirements
+    };
 
-      // You can extend the API to accept additional registration details
-      await axios.post(`http://localhost:5001/api/events/${id}/register`, 
-        {
-          numberOfTickets: formData.numberOfTickets,
-          specialRequirements: formData.specialRequirements
-        }, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      enqueueSnackbar('Successfully registered for the event!', { variant: 'success' });
-      navigate(`/events/${id}`); // Redirect back to event details
-    } catch (error) {
-      console.error('Error registering for event:', error);
-      enqueueSnackbar(error.response?.data?.message || 'Failed to register for event', { variant: 'error' });
-    } finally {
-      setSubmitting(false);
-    }
+    // Navigate to payment page with registration data
+    navigate('/payment', { 
+      state: { 
+        registrationData: registrationData,
+        amount: registrationData.totalAmount
+      } 
+    });
   };
 
   const formatDate = (dateString) => {
@@ -178,40 +171,7 @@ const EventRegistration = () => {
 
           {/* Registration Form */}
           <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              if (!formData.agreeToTerms) {
-                enqueueSnackbar('You must agree to the terms and conditions', { variant: 'warning' });
-                return;
-              }
-              setSubmitting(true);
-              try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                  navigate('/login');
-                  return;
-                }
-                await axios.post(
-                  `http://localhost:5001/api/events/${id}/register`,
-                  {
-                    numberOfTickets: formData.numberOfTickets,
-                    specialRequirements: formData.specialRequirements
-                  },
-                  {
-                    headers: {
-                      Authorization: `Bearer ${token}`
-                    }
-                  }
-                );
-               
-                navigate('/payment'); // <-- Modified navigation
-              } catch (error) {
-                console.error('Error registering for event:', error);
-                enqueueSnackbar(error.response?.data?.message || 'Failed to register for event', { variant: 'error' });
-              } finally {
-                setSubmitting(false);
-              }
-            }}
+            onSubmit={handleSubmit}
             className="space-y-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -320,7 +280,7 @@ const EventRegistration = () => {
                   submitting ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
               >
-                {submitting ? 'Processing...' : 'Complete Registration'}
+                {submitting ? 'Processing...' : 'Next'}
               </button>
             </div>
           </form>
